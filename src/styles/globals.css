@@ -1,0 +1,126 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 30, 41, 59; /* slate-800 */
+  --background-end-rgb: 15, 23, 42; /* slate-900 */
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+/* Estilos para animações de alerta */
+@keyframes siren {
+  0% {
+    box-shadow: 0 0 10px 5px rgba(239, 68, 68, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(239, 68, 68, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 10px 5px rgba(239, 68, 68, 0.7);
+  }
+}
+
+.animate-siren {
+  animation: siren 1.5s infinite;
+}
+
+/* Estilos para animações de borda */
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+  50% {
+    border-color: rgba(239, 68, 68, 1);
+  }
+}
+
+.pulse-border {
+  animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Estilos para animações de brilho */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px rgba(14, 165, 233, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.8);
+  }
+}
+
+.animate-glow {
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+/* Estilos para animações de fogos de artifício */
+.pyro {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.pyro > .before, .pyro > .after {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  box-shadow: 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff, 0 0 #fff;
+  animation: 1s bang ease-out infinite backwards, 1s gravity ease-in infinite backwards, 5s position linear infinite backwards;
+  animation-delay: calc(var(--delay) * 1s), calc(var(--delay) * 1s), calc(var(--delay) * 0.5s);
+}
+
+.pyro > .after {
+  animation-delay: calc(var(--delay) * 1.25s), calc(var(--delay) * 1.25s), calc(var(--delay) * 0.75s);
+  animation-duration: 1.25s, 1.25s, 6.25s;
+}
+
+@keyframes bang {
+  to {
+    box-shadow: -70px -115.67px #00ff73, -28px -99.67px #a6ff00, -58px -31.67px #ff00c8, -13px -45.67px #ff0033, -19px -66.67px #00ff8c, 65px 29.33px #ff0400, -65px 20.33px #ff00fb, 27px -76.67px #00eaff, -70px 4.33px #00ff33, 66px -128.67px #ff001e, 27px -66.67px #00ff73, 28px 18.33px #8400ff, -33px -46.67px #0048ff, 59px -85.67px #00ff8c, -92px 0.33px #00ff09, 45px 68.33px #ff0037, -61px -99.67px #00ffa2, -7px -26.67px #00ff33, 29px 77.33px #ffae00, 40px -27.67px #00ff73, 15px -56.67px #ff0059, -86px -63.67px #ff001e, 31px -80.67px #ff00d5, -44px -5.67px #ff0044, 70px 5.33px #00ff15, -35px -82.67px #00ff73, 56px -134.67px #00ff9d, -13px -10.67px #00ffd0, -24px -77.67px #00ff26, -33px -66.67px #00ff40, 42px -123.67px #ff0022, 21px -59.67px #ff00ea, 5px -39.67px #00ff8c, 48px -96.67px #0099ff, 32px -13.67px #00ff09, 7px -48.67px #ff0400, 9px -56.67px #ff5e00, -11px -86.67px #ff0044, 42px -65.67px #00ff1a, -17px -83.67px #00ff73, -5px 12.33px #00ff0d, -53px -67.67px #0051ff, 59px -88.67px #0091ff, -45px -64.67px #ff00fb, -7px -16.67px #00ff73, 41px -77.67px #0dff00, 5px -64.67px #00ff73, -36px -74.67px #ff00c4;
+  }
+}
+
+@keyframes gravity {
+  to {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+}
+
+@keyframes position {
+  0%, 19.9% {
+    margin-top: 10%;
+    margin-left: 40%;
+  }
+  20%, 39.9% {
+    margin-top: 40%;
+    margin-left: 30%;
+  }
+  40%, 59.9% {
+    margin-top: 20%;
+    margin-left: 70%;
+  }
+  60%, 79.9% {
+    margin-top: 30%;
+    margin-left: 20%;
+  }
+  80%, 99.9% {
+    margin-top: 30%;
+    margin-left: 80%;
+  }
+}

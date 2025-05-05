@@ -1,0 +1,72 @@
+version: "3.7"
+
+services:
+  scanshield:
+    image: ${DOCKER_REGISTRY:-fmguardia}/scanshield:${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - network_public
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+      # Supabase - estas variáveis serão definidas no ambiente de produção
+      - SUPABASE_URL=${SUPABASE_URL}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      # Configurações adicionais
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-https://scanshield.com}
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-change_me_in_production}
+      - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL:-https://scanshield.com}
+
+    deploy:
+      mode: replicated
+      replicas: 1
+      update_config:
+        order: start-first
+        failure_action: rollback
+        delay: 10s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      labels:
+        # Traefik configurações básicas
+        - "traefik.enable=true"
+        - "traefik.http.routers.scanshield.rule=Host(`scanshield.com`)"
+        - "traefik.http.routers.scanshield.entrypoints=websecure"
+        - "traefik.http.routers.scanshield.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.scanshield.loadbalancer.server.port=3000"
+
+        # Headers de segurança
+        - "traefik.http.middlewares.scanshield-headers.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+        - "traefik.http.middlewares.scanshield-headers.headers.sslRedirect=true"
+        - "traefik.http.middlewares.scanshield-headers.headers.stsSeconds=31536000"
+        - "traefik.http.middlewares.scanshield-headers.headers.stsIncludeSubdomains=true"
+        - "traefik.http.middlewares.scanshield-headers.headers.stsPreload=true"
+        - "traefik.http.middlewares.scanshield-headers.headers.forceSTSHeader=true"
+        - "traefik.http.middlewares.scanshield-headers.headers.customFrameOptionsValue=SAMEORIGIN"
+        - "traefik.http.middlewares.scanshield-headers.headers.contentSecurityPolicy=default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'"
+
+        # Aplicar middlewares
+        - "traefik.http.routers.scanshield.middlewares=scanshield-headers"
+
+        # Compressão
+        - "traefik.http.middlewares.scanshield-compress.compress=true"
+        - "traefik.http.routers.scanshield.middlewares=scanshield-compress,scanshield-headers"
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+networks:
+  network_public:
+    external: true
+    name: network_public

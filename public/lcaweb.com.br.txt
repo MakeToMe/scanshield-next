@@ -1,0 +1,9 @@
+🌐 URL(s) de API suspeitas encontradas:
+[1] https://ovvuocrwcukxacnwwzpe.supabase.co/rest/v1/laboratory_groups?name=eq.LRM
+
+🔑 Possíveis chaves (anon, secret, JWT) encontradas:
+[1] JWT: eyJhbGciOiJIUzI1NiIs...
+
+📊 Tabelas encontradas:
+[1] default_table (0 registros)
+    Colunas: id, created_at
