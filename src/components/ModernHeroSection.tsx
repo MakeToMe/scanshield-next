@@ -126,8 +126,10 @@ export default function ModernHeroSection() {
       
       const normalizedUrl = normalizeUrl(data.url);
       
-      // Faz a chamada à API
-      const response = await axios.post('/api/scan', { url: normalizedUrl });
+      // Faz a chamada à API usando caminho absoluto
+      const apiUrl = new URL('/api/scan', window.location.href).href;
+      console.log(`Enviando scan para: ${apiUrl}`);
+      const response = await axios.post(apiUrl, { url: normalizedUrl });
       
       // Verifica se a resposta contém o número de sites escaneados
       if (response.data.sitesScanned && typeof response.data.sitesScanned === 'number') {

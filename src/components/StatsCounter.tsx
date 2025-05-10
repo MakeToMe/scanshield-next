@@ -23,7 +23,10 @@ export default function StatsCounter() {
   const fetchStats = async (retryCount = 0) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/stats');
+      // Usar caminho relativo com base na URL atual
+      const apiUrl = new URL('/api/stats', window.location.href).href;
+      console.log(`Buscando estatísticas de: ${apiUrl}`);
+      const response = await fetch(apiUrl);
       
       if (!response.ok) {
         console.warn(`API retornou status ${response.status}`);
