@@ -131,14 +131,15 @@ export default function ModernHeroSection() {
       
       // Verifica se a resposta contém o número de sites escaneados
       if (response.data.sitesScanned && typeof response.data.sitesScanned === 'number') {
-        // Atualiza o contador local
-        setSitesScanned(response.data.sitesScanned);
+        // Não atualiza o contador local, apenas dispara o evento
+        // para que o StatsCounter busque o valor real do banco de dados
         
         // Dispara um evento personalizado para atualizar o contador global
         const sitesCountEvent = new CustomEvent('sites-count-updated', {
           detail: { count: response.data.sitesScanned }
         });
         window.dispatchEvent(sitesCountEvent);
+        
         console.log(`Evento disparado: sites-count-updated com valor ${response.data.sitesScanned}`);
       }
       
