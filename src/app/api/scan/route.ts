@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
+import { startScan, updateScanStatus } from '../scan-status/route';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,12 +23,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'URL é obrigatória' }, { status: 400 });
     }
 
+    // Gera um ID único para este escaneamento
+    const scanId = uuidv4();
+    
+    // Inicia o escaneamento no sistema de status
+    startScan(scanId);
+    
     // Normaliza a URL
     let normalizedUrl = url;
     if (!normalizedUrl.startsWith('http://') && !normalizedUrl.startsWith('https://')) {
       normalizedUrl = 'https://' + normalizedUrl;
     }
 
+    // Atualiza o status para 'extraindo dados'
+    updateScanStatus(scanId, 'extracting_data', 10);
+    
     // Adiciona o domínio escaneado na tabela scans e obtém o número total de sites
     let sitesScanned = 0;
     try {
@@ -543,6 +554,9 @@ export async function POST(request: NextRequest) {
       } catch (browserError) {
         console.error('Erro ao fechar o navegador:', browserError);
       }
+
+      // Atualiza o status para 'gerando diagnóstico'
+      updateScanStatus(scanId, 'generating_diagnosis', 70);
 
       // Função auxiliar para truncar strings com segurança
       const truncateString = (str: any, length: number): string => {

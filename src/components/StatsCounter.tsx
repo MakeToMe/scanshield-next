@@ -42,6 +42,12 @@ export default function StatsCounter() {
       if (data && typeof data.sitesScanned === 'number') {
         console.log(`Atualizando contador com valor real do banco: ${data.sitesScanned}`);
         setSitesScanned(data.sitesScanned);
+        
+        // Dispara um evento personalizado para que outros componentes possam atualizar seus contadores
+        const statsUpdatedEvent = new CustomEvent('stats-updated', {
+          detail: { count: data.sitesScanned }
+        });
+        window.dispatchEvent(statsUpdatedEvent);
       } else {
         console.warn('Dados inválidos recebidos da API:', data);
         throw new Error('Dados inválidos recebidos da API');
@@ -63,6 +69,12 @@ export default function StatsCounter() {
     // Inicia a busca das estatísticas
     fetchStats();
     
+    // Configura um intervalo para atualizar as estatísticas a cada 5 segundos
+    const intervalId = setInterval(() => {
+      console.log('Atualizando estatísticas periodicamente');
+      fetchStats();
+    }, 5000);
+    
     // Função para lidar com o evento de atualização do contador
     function handleSitesCountUpdated(event: SitesCountEvent) {
       const { count } = event.detail;
@@ -78,8 +90,9 @@ export default function StatsCounter() {
     // Adiciona o listener para o evento personalizado
     window.addEventListener('sites-count-updated', handleSitesCountUpdated);
     
-    // Limpa o listener quando o componente for desmontado
+    // Limpa o listener e o intervalo quando o componente for desmontado
     return () => {
+      clearInterval(intervalId);
       window.removeEventListener('sites-count-updated', handleSitesCountUpdated);
     };
   }, []);

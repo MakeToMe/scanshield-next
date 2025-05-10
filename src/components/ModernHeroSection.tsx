@@ -22,6 +22,8 @@ import NetworkAnimation from './NetworkAnimation';
 import CounterAnimation from './CounterAnimation';
 import ErrorNotFound from './ErrorNotFound';
 import Footer from './Footer';
+import StatsCounter from './StatsCounter';
+import ScanProgressSteps, { ScanStep } from './ScanProgressSteps';
 
 interface FormData {
   url: string;
@@ -106,6 +108,58 @@ export default function ModernHeroSection() {
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [showNotFound, setShowNotFound] = useState(false);
   const [sitesScanned, setSitesScanned] = useState(0);
+  const [currentStep, setCurrentStep] = useState<ScanStep>('initial');
+  
+  // Adiciona um evento para atualizar o contador local quando o StatsCounter atualizar
+  useEffect(() => {
+    const handleStatsUpdated = (event: CustomEvent<{count: number}>) => {
+      if (event.detail && typeof event.detail.count === 'number') {
+        console.log('ModernHeroSection recebeu evento stats-updated com valor:', event.detail.count);
+        setSitesScanned(event.detail.count);
+      }
+    };
+    
+    // Adiciona o ouvinte de evento personalizado
+    window.addEventListener('stats-updated', handleStatsUpdated as EventListener);
+    
+    // Também ouve o evento sites-count-updated para compatibilidade
+    const handleSitesCountUpdated = (event: CustomEvent<{count: number}>) => {
+      if (event.detail && typeof event.detail.count === 'number') {
+        console.log('ModernHeroSection recebeu evento sites-count-updated com valor:', event.detail.count);
+        setSitesScanned(event.detail.count);
+      }
+    };
+    window.addEventListener('sites-count-updated', handleSitesCountUpdated as EventListener);
+    
+    // Configura um intervalo para atualizar as estatísticas a cada 3 segundos
+    const intervalId = setInterval(fetchStats, 3000);
+    
+    // Carrega as estatísticas iniciais imediatamente
+    fetchStats();
+    
+    return () => {
+      clearInterval(intervalId);
+      window.removeEventListener('stats-updated', handleStatsUpdated as EventListener);
+      window.removeEventListener('sites-count-updated', handleSitesCountUpdated as EventListener);
+    };
+  }, []);
+  
+  // Função para buscar as estatísticas do servidor
+  const fetchStats = async () => {
+    try {
+      const apiUrl = new URL('/api/stats', window.location.href).href;
+      const response = await fetch(apiUrl);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data.sitesScanned === 'number') {
+          console.log('ModernHeroSection atualizou estatísticas:', data.sitesScanned);
+          setSitesScanned(data.sitesScanned);
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
+    }
+  };
 
   const normalizeUrl = (url: string) => {
     if (!url) return url;
@@ -117,6 +171,8 @@ export default function ModernHeroSection() {
     return url;
   };
 
+
+
   const onSubmit = async (data: FormData) => {
     try {
       // Ativa o estado de carregamento imediatamente
@@ -124,26 +180,33 @@ export default function ModernHeroSection() {
       setShowNotFound(false);
       setScanResult(null);
       
+      // Atualiza o passo atual para URL enviada
+      setCurrentStep('url_submitted');
+      
       const normalizedUrl = normalizeUrl(data.url);
+      
+      // Simula a extração de dados (passo 2)
+      setTimeout(() => setCurrentStep('extracting_data'), 500);
       
       // Faz a chamada à API usando caminho absoluto
       const apiUrl = new URL('/api/scan', window.location.href).href;
       console.log(`Enviando scan para: ${apiUrl}`);
+      
+      // Simula os próximos passos com tempos diferentes
+      setTimeout(() => setCurrentStep('searching_vulnerabilities'), 2000);
+      setTimeout(() => setCurrentStep('analyzing_apis'), 4000);
+      setTimeout(() => setCurrentStep('generating_diagnosis'), 6000);
+      
       const response = await axios.post(apiUrl, { url: normalizedUrl });
       
-      // Verifica se a resposta contém o número de sites escaneados
-      if (response.data.sitesScanned && typeof response.data.sitesScanned === 'number') {
-        // Não atualiza o contador local, apenas dispara o evento
-        // para que o StatsCounter busque o valor real do banco de dados
-        
-        // Dispara um evento personalizado para atualizar o contador global
-        const sitesCountEvent = new CustomEvent('sites-count-updated', {
-          detail: { count: response.data.sitesScanned }
-        });
-        window.dispatchEvent(sitesCountEvent);
-        
-        console.log(`Evento disparado: sites-count-updated com valor ${response.data.sitesScanned}`);
-      }
+      // Marca como concluído quando a resposta chegar
+      setTimeout(() => setCurrentStep('completed'), 500);
+      
+      // Após o envio, atualiza as estatísticas imediatamente
+      fetchStats();
+      
+      // E programa outra atualização após 1 segundo para garantir que os dados mais recentes sejam carregados
+      setTimeout(fetchStats, 1000);
       
       if (response.data.error && response.data.error.includes('404')) {
         setShowNotFound(true);
@@ -216,6 +279,9 @@ export default function ModernHeroSection() {
               </h1>
             </div>
 
+            {/* Componente StatsCounter oculto para garantir que as estatísticas sejam carregadas */}
+            <div className="hidden"><StatsCounter /></div>
+            
             {/* Contador de sites escaneados e passos */}
             <div className="flex flex-col md:flex-row justify-between items-stretch mb-12 gap-6 max-w-4xl mx-auto">
               {/* Contador de sites - lado esquerdo */}
@@ -234,28 +300,7 @@ export default function ModernHeroSection() {
               
               {/* Passos do processo - lado direito */}
               <div className="px-8 py-6 md:w-3/5 flex items-center">
-                <div className="flex flex-col gap-4 w-full">
-                  <div className="flex items-start">
-                    <div className="text-indigo-400 w-7 h-7 flex items-center justify-center mr-4 flex-shrink-0 mt-0.5">
-                      <span className="text-xl font-bold">1</span>
-                    </div>
-                    <p className="text-gray-200 text-base">Informe a URL e clique em escanear</p>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="text-purple-400 w-7 h-7 flex items-center justify-center mr-4 flex-shrink-0 mt-0.5">
-                      <span className="text-xl font-bold">2</span>
-                    </div>
-                    <p className="text-gray-200 text-base">Aguarde enquanto o sistema extrai os dados</p>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="text-blue-400 w-7 h-7 flex items-center justify-center mr-4 flex-shrink-0 mt-0.5">
-                      <span className="text-xl font-bold">3</span>
-                    </div>
-                    <p className="text-gray-200 text-base">Receba o diagnóstico em poucos segundos</p>
-                  </div>
-                </div>
+                <ScanProgressSteps currentStep={currentStep} isLoading={isLoading} />
               </div>
             </div>
             
