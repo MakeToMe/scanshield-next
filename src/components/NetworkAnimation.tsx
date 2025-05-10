@@ -147,12 +147,14 @@ export default function NetworkAnimation() {
         });
         
         // Efeito de escaneamento
-        if (nearestScanLine && 'width' in nearestScanLine) {
+        if (nearestScanLine) {
           // Calcular intensidade do efeito baseado na distância
-          const intensity = 1 - (minDistance / (nearestScanLine.width * 1.5));
+          // Usando type assertion para garantir que o TypeScript reconheça a propriedade width
+          const scanLine = nearestScanLine as { width: number, color: string };
+          const intensity = 1 - (minDistance / (scanLine.width * 1.5));
           
           // Extrair cor do scan para usar no ponto
-          const pointColor = nearestScanLine.color;
+          const pointColor = scanLine.color;
           
           // Desenhar ponto com efeito de brilho
           ctx.beginPath();
@@ -166,9 +168,9 @@ export default function NetworkAnimation() {
           
           // Extrair componentes RGB da cor do scan
           let rgb = '255, 255, 255';
-          if (nearestScanLine.color === '#6366f1') rgb = '99, 102, 241';
-          if (nearestScanLine.color === '#a855f7') rgb = '168, 85, 247';
-          if (nearestScanLine.color === '#38bdf8') rgb = '56, 189, 248';
+          if (scanLine.color === '#6366f1') rgb = '99, 102, 241';
+          if (scanLine.color === '#a855f7') rgb = '168, 85, 247';
+          if (scanLine.color === '#38bdf8') rgb = '56, 189, 248';
           
           ctx.fillStyle = `rgba(${rgb}, ${intensity * 0.3})`;
           ctx.fill();
