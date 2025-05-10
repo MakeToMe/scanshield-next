@@ -556,25 +556,25 @@ export async function POST(request: NextRequest) {
       const truncatedScanResults = {
         ...scanJsonData,
         urlsSupabase: Array.isArray(scanJsonData.urlsSupabase) 
-          ? scanJsonData.urlsSupabase.map(url => truncateString(url, 5)) 
+          ? scanJsonData.urlsSupabase.map((url: string) => truncateString(url, 5)) 
           : [],
         tokensJWT: Array.isArray(scanJsonData.tokensJWT) 
-          ? scanJsonData.tokensJWT.map(token => truncateString(token, 5)) 
+          ? scanJsonData.tokensJWT.map((token: string) => truncateString(token, 5)) 
           : [],
         urlsApi: Array.isArray(scanJsonData.urlsApi) 
-          ? scanJsonData.urlsApi.map(url => truncateString(url, 5)) 
+          ? scanJsonData.urlsApi.map((url: string) => truncateString(url, 5)) 
           : [],
         urlsGenericas: Array.isArray(scanJsonData.urlsGenericas) 
-          ? scanJsonData.urlsGenericas.map(url => truncateString(url, 5)) 
+          ? scanJsonData.urlsGenericas.map((url: string) => truncateString(url, 5)) 
           : [],
         chavesSensiveis: Array.isArray(scanJsonData.chavesSensiveis) 
-          ? scanJsonData.chavesSensiveis.map(key => truncateString(key, 5)) 
+          ? scanJsonData.chavesSensiveis.map((key: string) => truncateString(key, 5)) 
           : [],
         urlsBancoDados: Array.isArray(scanJsonData.urlsBancoDados) 
-          ? scanJsonData.urlsBancoDados.map(url => truncateString(url, 5)) 
+          ? scanJsonData.urlsBancoDados.map((url: string) => truncateString(url, 5)) 
           : [],
         urlsSuspeitas: Array.isArray(scanJsonData.urlsSuspeitas) 
-          ? scanJsonData.urlsSuspeitas.map(url => truncateString(url, 5)) 
+          ? scanJsonData.urlsSuspeitas.map((url: string) => truncateString(url, 5)) 
           : []
       };
       
