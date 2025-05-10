@@ -134,9 +134,9 @@ export default function NetworkAnimation() {
         if (point.x < 0 || point.x > window.innerWidth) point.vx *= -1;
         if (point.y < 0 || point.y > window.innerHeight) point.vy *= -1;
         
-        // Verificar se o ponto está próximo a alguma linha de scan e obter detalhes
-        let nearestScanLine: ScanLine | null = null;
+        // Verificar proximidade com linhas de scan
         let minDistance = Infinity;
+        let nearestScanLine: ScanLine | null = null;
         
         scanLines.forEach((scanLine: ScanLine) => {
           const distance = Math.abs(point.y - scanLine.y);
