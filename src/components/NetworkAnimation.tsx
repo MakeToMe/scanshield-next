@@ -147,7 +147,7 @@ export default function NetworkAnimation() {
         });
         
         // Efeito de escaneamento
-        if (nearestScanLine) {
+        if (nearestScanLine && 'width' in nearestScanLine) {
           // Calcular intensidade do efeito baseado na distância
           const intensity = 1 - (minDistance / (nearestScanLine.width * 1.5));
           
