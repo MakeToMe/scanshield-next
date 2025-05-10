@@ -1,9 +1,12 @@
-import HeroSection from '@/components/HeroSection';
+import ModernHeroSection from '@/components/ModernHeroSection';
+// import HeroSection from '@/components/HeroSection';
 
 export default function Home() {
   return (
     <main>
-      <HeroSection />
+      <ModernHeroSection />
+      {/* Para voltar ao design original, comente a linha acima e descomente a linha abaixo */}
+      {/* <HeroSection /> */}
     </main>
   );
 }
