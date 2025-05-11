@@ -26,7 +26,16 @@ export default function StatsCounter() {
       // Usar caminho relativo com base na URL atual
       const apiUrl = new URL('/api/stats', window.location.href).href;
       console.log(`Buscando estatísticas de: ${apiUrl}`);
-      const response = await fetch(apiUrl);
+      // Adicionando timestamp para evitar cache
+      const urlWithNoCache = `${apiUrl}?t=${Date.now()}`;
+      const response = await fetch(urlWithNoCache, {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      });
       
       if (!response.ok) {
         console.warn(`API retornou status ${response.status}`);

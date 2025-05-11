@@ -15,10 +15,24 @@ export async function GET(request: NextRequest) {
     }
 
     console.log(`Total de registros encontrados: ${count}`);
-    return NextResponse.json({ sitesScanned: count ?? 0 }, { status: 200 });
+    const response = NextResponse.json({ sitesScanned: count ?? 0 }, { status: 200 });
+    
+    // Adiciona headers para evitar cache
+    response.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error: any) {
     console.error('Erro na consulta:', error);
     // Em caso de erro, retorna 0
-    return NextResponse.json({ sitesScanned: 0 }, { status: 200 });
+    const errorResponse = NextResponse.json({ sitesScanned: 0 }, { status: 200 });
+    
+    // Adiciona headers para evitar cache
+    errorResponse.headers.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    errorResponse.headers.set('Pragma', 'no-cache');
+    errorResponse.headers.set('Expires', '0');
+    
+    return errorResponse;
   }
 }
