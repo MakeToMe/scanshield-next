@@ -268,10 +268,13 @@ export default function ModernHeroSection() {
                 <ShieldCheckIcon className="h-12 w-12 sm:h-14 sm:w-14 text-indigo-500 mr-3 animate-pulse" />
                 <div className="absolute inset-0 bg-indigo-500 opacity-20 rounded-full blur-md animate-ping-slow"></div>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white md:text-6xl bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-transparent bg-clip-text">
-                ScanShield
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight md:text-6xl">
+                <span className="text-primary">Scan</span><span className="text-secondary">Shield</span>
               </h1>
             </div>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto mb-6">
+              Escaneie qualquer site em busca de vulnerabilidades, receba um relatório detalhado e garanta a segurança da sua aplicação.
+            </p>
 
             {/* Componente StatsCounter oculto para garantir que as estatísticas sejam carregadas */}
             <div className="hidden"><StatsCounter /></div>
