@@ -29,6 +29,10 @@ lerna-debug.log*
 .vscode/*
 !.vscode/extensions.json
 .idea
+
+# Arquivos de resultados de scan
+public/*-scan.json
+public/*-passo*.json
 .DS_Store
 *.suo
 *.ntvs*
