@@ -202,11 +202,8 @@ export default function ModernHeroSection() {
       // Marca como concluído quando a resposta chegar
       setTimeout(() => setCurrentStep('completed'), 500);
       
-      // Após o envio, atualiza as estatísticas imediatamente
-      fetchStats();
-      
-      // E programa outra atualização após 1 segundo para garantir que os dados mais recentes sejam carregados
-      setTimeout(fetchStats, 1000);
+      // Não precisamos mais chamar fetchStats aqui, pois o contador será atualizado
+      // através do evento 'sites-count-updated' quando recebermos a resposta
       
       if (response.data.error && response.data.error.includes('404')) {
         setShowNotFound(true);
@@ -215,6 +212,16 @@ export default function ModernHeroSection() {
       }
       
       setScanResult(response.data);
+      
+      // Se recebemos o número de sites escaneados na resposta, atualizamos o contador
+      if (response.data.sitesScanned && typeof response.data.sitesScanned === 'number') {
+        // Dispara um evento personalizado para atualizar o contador em todos os componentes
+        const sitesCountEvent = new CustomEvent('sites-count-updated', {
+          detail: { count: response.data.sitesScanned }
+        });
+        window.dispatchEvent(sitesCountEvent);
+        console.log(`Contador atualizado após escaneamento: ${response.data.sitesScanned}`);
+      }
     } catch (error: any) {
       console.error('Erro ao escanear:', error);
       

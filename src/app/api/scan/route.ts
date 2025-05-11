@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import { startScan, updateScanStatus } from '../scan-status/utils';
+import { incrementSitesCounter } from '@/lib/increment-counter';
 
 export async function POST(request: NextRequest) {
   try {
@@ -607,12 +608,15 @@ export async function POST(request: NextRequest) {
           : []
       } : null;
       
-      // Retorna os resultados truncados e o número de sites escaneados
+      // Incrementa o contador de sites escaneados quando o diagnóstico é concluído
+      const newCount = await incrementSitesCounter();
+      
+      // Retorna os resultados truncados e o número de sites escaneados atualizado
       return NextResponse.json({
         scanResults: truncatedScanResults,
         supabaseInfo: truncatedSupabaseInfo,
         analysisResult: analysisResult,
-        sitesScanned: sitesScanned, // Inclui o número de sites escaneados
+        sitesScanned: newCount, // Usa o valor atualizado do contador
         message: `Escaneamento concluído. Resultados salvos em ${domainName}-scan.json`
       });
     } catch (error: any) {

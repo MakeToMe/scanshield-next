@@ -75,14 +75,11 @@ export default function StatsCounter() {
   };
 
   useEffect(() => {
-    // Inicia a busca das estatísticas
+    // Inicia a busca das estatísticas apenas uma vez ao carregar
     fetchStats();
     
-    // Configura um intervalo para atualizar as estatísticas a cada 5 segundos
-    const intervalId = setInterval(() => {
-      console.log('Atualizando estatísticas periodicamente');
-      fetchStats();
-    }, 5000);
+    // Não usamos mais polling periódico, apenas atualizamos quando recebemos eventos
+    // O contador será atualizado quando um escaneamento for concluído
     
     // Função para lidar com o evento de atualização do contador
     function handleSitesCountUpdated(event: SitesCountEvent) {
@@ -99,9 +96,8 @@ export default function StatsCounter() {
     // Adiciona o listener para o evento personalizado
     window.addEventListener('sites-count-updated', handleSitesCountUpdated);
     
-    // Limpa o listener e o intervalo quando o componente for desmontado
+    // Limpa o listener quando o componente for desmontado
     return () => {
-      clearInterval(intervalId);
       window.removeEventListener('sites-count-updated', handleSitesCountUpdated);
     };
   }, []);
