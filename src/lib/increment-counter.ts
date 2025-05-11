@@ -1,32 +1,28 @@
 import { supabaseStats } from './supabase-stats';
 
 /**
- * Incrementa o contador de sites escaneados e retorna o novo valor
+ * Consulta o número atual de sites escaneados e retorna o valor
  * Esta função é chamada apenas quando um escaneamento é concluído com sucesso
  */
 export async function incrementSitesCounter(): Promise<number> {
   try {
-    // Primeiro, obtém a contagem atual
-    const { count, error: countError } = await supabaseStats
+    // Consulta o banco para obter a contagem atual
+    const { count, error } = await supabaseStats
       .from('scans')
       .select('uid', { count: 'exact', head: true });
     
-    if (countError) {
-      console.error('Erro ao consultar contagem atual:', countError);
+    if (error) {
+      console.error('Erro ao consultar contagem atual:', error);
       return 0;
     }
     
-    // Dispara um evento personalizado para atualizar o contador em todos os clientes
+    // Retorna o valor atual
     const currentCount = count || 0;
-    const newCount = currentCount + 1;
+    console.log(`Total de sites escaneados: ${currentCount}`);
     
-    // Dispara um evento para o canal 'stats' com o novo valor
-    // Isso pode ser usado para implementar WebSockets no futuro
-    console.log(`Contador incrementado: ${currentCount} -> ${newCount}`);
-    
-    return newCount;
+    return currentCount;
   } catch (error) {
-    console.error('Erro ao incrementar contador:', error);
+    console.error('Erro ao consultar contador:', error);
     return 0;
   }
 }

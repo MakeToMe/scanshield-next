@@ -131,14 +131,10 @@ export default function ModernHeroSection() {
     };
     window.addEventListener('sites-count-updated', handleSitesCountUpdated as EventListener);
     
-    // Configura um intervalo para atualizar as estatísticas a cada 3 segundos
-    const intervalId = setInterval(fetchStats, 3000);
-    
-    // Carrega as estatísticas iniciais imediatamente
+    // Carrega as estatísticas iniciais apenas uma vez ao carregar
     fetchStats();
     
     return () => {
-      clearInterval(intervalId);
       window.removeEventListener('stats-updated', handleStatsUpdated as EventListener);
       window.removeEventListener('sites-count-updated', handleSitesCountUpdated as EventListener);
     };
@@ -257,17 +253,8 @@ export default function ModernHeroSection() {
     }
   };
 
-  // Efeito para buscar o número inicial de sites escaneados
-  useEffect(() => {
-    fetch('/api/stats')
-      .then(res => res.json())
-      .then(data => {
-        if (data && typeof data.sitesScanned === 'number') {
-          setSitesScanned(data.sitesScanned);
-        }
-      })
-      .catch(err => console.error('Erro ao buscar estatísticas:', err));
-  }, []);
+  // Não precisamos mais deste useEffect, pois o StatsCounter já está buscando as estatísticas
+  // e atualizando o contador através de eventos
 
   return (
     <div className="min-h-screen bg-[#13122b] text-white">

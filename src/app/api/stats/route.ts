@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseStats } from '@/lib/supabase-stats';
 
-
 export async function GET(request: NextRequest) {
   try {
     // Consulta usando o client supabaseStats já configurado para schema 'scan'
