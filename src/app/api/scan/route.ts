@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
-import { startScan, updateScanStatus } from '../scan-status/route';
+import { startScan, updateScanStatus } from '../scan-status/utils';
 
 export async function POST(request: NextRequest) {
   try {
