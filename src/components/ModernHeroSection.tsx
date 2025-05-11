@@ -21,7 +21,6 @@ import {
 import NetworkAnimation from './NetworkAnimation';
 import CounterAnimation from './CounterAnimation';
 import ErrorNotFound from './ErrorNotFound';
-import Footer from './Footer';
 import StatsCounter from './StatsCounter';
 import ScanProgressSteps, { ScanStep } from './ScanProgressSteps';
 
@@ -421,7 +420,7 @@ export default function ModernHeroSection() {
                             {/* Tabelas */}
                             {scanResult.supabaseInfo && scanResult.supabaseInfo.tables && scanResult.supabaseInfo.tables.length > 0 && (
                               <div className="mt-6">
-                                <h4 className="text-lg font-medium text-white mb-3">Tabelas encontradas:</h4>
+                                <h4 className="text-lg font-medium text-white mb-3">Tabelas encontradas: <span className="text-secondary">{scanResult.supabaseInfo.tables.length}</span></h4>
                                 <div className="bg-[#13122b] border border-[#2e2d4c] rounded-lg p-4 overflow-x-auto">
                                   <table className="min-w-full divide-y divide-[#2e2d4c]">
                                     <thead>
@@ -448,7 +447,7 @@ export default function ModernHeroSection() {
                             {/* RPCs */}
                             {scanResult.supabaseInfo && scanResult.supabaseInfo.rpcs && scanResult.supabaseInfo.rpcs.length > 0 && (
                               <div className="mt-6">
-                                <h4 className="text-lg font-medium text-white mb-3">Funções RPC encontradas:</h4>
+                                <h4 className="text-lg font-medium text-white mb-3">Funções RPC encontradas: <span className="text-secondary">{scanResult.supabaseInfo.rpcs.length}</span></h4>
                                 <div className="bg-[#13122b] border border-[#2e2d4c] rounded-lg overflow-hidden">
                                   <table className="min-w-full divide-y divide-[#2e2d4c]">
                                     <thead className="bg-[#1e1d3c]">
@@ -592,9 +591,6 @@ export default function ModernHeroSection() {
           <SecurityFeatures />
         </div>
       </section>
-      
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

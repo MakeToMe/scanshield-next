@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'pub-55625ef692bf44f3a5a40fad2cfe6bcb.r2.dev'],
   },
   // Configuração para o Supabase
   env: {

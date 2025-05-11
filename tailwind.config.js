@@ -9,9 +9,9 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#0ea5e9', // sky-500
-          dark: '#0284c7',    // sky-600
-          light: '#38bdf8',   // sky-400
+          DEFAULT: '#04F8F6', // nova cor para Scan
+          dark: '#03d8d6',    // versão mais escura
+          light: '#4ffbfa',   // versão mais clara
         },
         secondary: {
           DEFAULT: '#f43f5e', // rose-500

@@ -274,11 +274,42 @@ export async function POST(request: NextRequest) {
           // Inicializa a lista de URLs suspeitas
           const urlsSuspeitas: string[] = [];
           
+          // Lista de URLs a serem ignoradas (frameworks, bibliotecas, namespaces XML, etc.)
+          const urlsParaIgnorar = [
+            "https://react.dev/errors/",
+            "http://www.w3.org/2000/svg",
+            "http://www.w3.org/1998/Math/MathML",
+            "http://www.w3.org/1999/xlink",
+            "http://www.w3.org/XML/1998/namespace",
+            "http://n",
+            "https://nextjs.org/docs/",
+            "http://localhost",
+            "https://github.com/zloirock/core-js",
+            "https://a",
+            "https://a/c%20d?a=1&c=3",
+            "https://a@b",
+            "https://тест",
+            "https://a#б",
+            "https://x"
+          ];
+          
+          // Converter o Set de URLs para um array para poder filtrar
+          const urlsArray = Array.from(results.urls) as string[];
+          
+          // Filtrar URLs genéricas para remover as URLs que devem ser ignoradas
+          const urlsGenericasFiltradas = urlsArray.filter((url: string) => {
+            // Verificar se a URL não está na lista de URLs para ignorar
+            // ou se não começa com algum prefixo da lista
+            return !urlsParaIgnorar.some(ignoredUrl => 
+              url === ignoredUrl || url.startsWith(ignoredUrl)
+            );
+          });
+          
           const finalJson = {
             urlsSupabase: [...results.supabaseApis],
             tokensJWT: [...results.jwt],
             urlsApi: [...results.apis],
-            urlsGenericas: [...results.urls],
+            urlsGenericas: [...urlsGenericasFiltradas],
             chavesSensiveis: [...results.keys],
             urlsBancoDados: [...results.dbUrls],
             urlsSuspeitas: urlsSuspeitas

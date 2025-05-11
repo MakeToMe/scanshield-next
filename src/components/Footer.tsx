@@ -1,8 +1,8 @@
 'use client';
 
-export default function Footer() {
-  const currentYear = new Date().getFullYear();
+import Image from 'next/image';
 
+export default function Footer() {
   return (
     <footer className="bg-dark-darker py-8">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -17,11 +17,18 @@ export default function Footer() {
                 Protegendo seus dados contra exposição indevida
               </p>
             </div>
-            <div className="text-sm text-gray-400">
-              <p>&copy; {currentYear} ScanShield. Todos os direitos reservados.</p>
-              <p className="mt-1">
-                Desenvolvido com segurança em mente.
-              </p>
+            <div className="text-sm text-gray-400 flex flex-col items-center">
+              <p>&copy; Desenvolvido por Guardia Soluções em Tecnologia</p>
+              <div className="mt-3 relative h-12 w-36">
+                <Image 
+                  src="https://pub-55625ef692bf44f3a5a40fad2cfe6bcb.r2.dev/documentos/GST-TRANSPARENTE.png"
+                  alt="Guardia Soluções em Tecnologia"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
+                  style={{ objectFit: 'contain' }}
+                />
+              </div>
             </div>
           </div>
         </div>
