@@ -8,7 +8,9 @@ import {
   CodeBracketIcon,
   DocumentChartBarIcon,
   CheckCircleIcon,
-  SparklesIcon
+  SparklesIcon,
+  GlobeAltIcon,
+  ServerIcon
 } from '@heroicons/react/24/outline';
 
 export type ScanStep = 
@@ -31,17 +33,17 @@ const ScanProgressSteps: React.FC<ScanProgressStepsProps> = ({ currentStep, isLo
     {
       id: 'initial',
       name: 'Informe a URL e clique em escanear',
-      icon: SparklesIcon,
+      icon: GlobeAltIcon,
     },
     {
       id: 'url_submitted',
       name: 'URL enviada para análise',
-      icon: CheckCircleIcon,
+      icon: GlobeAltIcon,
     },
     {
       id: 'extracting_data',
       name: 'Extraindo dados',
-      icon: ArrowPathIcon,
+      icon: ServerIcon,
     },
     {
       id: 'searching_vulnerabilities',
@@ -61,7 +63,7 @@ const ScanProgressSteps: React.FC<ScanProgressStepsProps> = ({ currentStep, isLo
     {
       id: 'completed',
       name: 'Diagnóstico realizado',
-      icon: CheckCircleIcon,
+      icon: SparklesIcon,
     }
   ];
 
@@ -98,18 +100,22 @@ const ScanProgressSteps: React.FC<ScanProgressStepsProps> = ({ currentStep, isLo
         
         return (
           <div key={step.id} className="flex items-start">
-            {isPreviousStep || (isCurrentStep && step.id === 'completed') ? (
-              <CheckCircleIcon className="text-green-500 w-7 h-7 flex-shrink-0 mr-4" />
-            ) : isCurrentStep ? (
-              <step.icon className={`text-indigo-400 w-7 h-7 flex-shrink-0 mr-4 ${isLoading ? 'animate-spin' : 'animate-pulse'}`} />
+            {(isCurrentStep && step.id !== 'completed') ? (
+              isLoading ? (
+                <ArrowPathIcon className="text-white w-7 h-7 flex-shrink-0 mr-4 animate-spin" />
+              ) : (
+                <step.icon className="text-white w-7 h-7 flex-shrink-0 mr-4 animate-pulse" />
+              )
+            ) : isPreviousStep || step.id === 'completed' ? (
+              <step.icon className="text-green-500 w-7 h-7 flex-shrink-0 mr-4" />
             ) : (
               <step.icon className="text-gray-400 w-7 h-7 flex-shrink-0 mr-4" />
             )}
             <p className={`text-base ${
-              isPreviousStep || (isCurrentStep && step.id === 'completed')
-                ? 'text-green-500' 
-                : isCurrentStep 
-                  ? 'text-indigo-400' 
+              (isCurrentStep && step.id !== 'completed')
+                ? 'text-white'
+                : isPreviousStep || step.id === 'completed'
+                  ? 'text-green-500' 
                   : 'text-gray-400'
             }`}>
               {step.name}
