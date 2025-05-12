@@ -254,6 +254,36 @@ export default function ModernHeroSection() {
         });
         window.dispatchEvent(sitesCountEvent);
         console.log(`Contador atualizado após escaneamento: ${response.data.sitesScanned}`);
+        
+        // Aguarda um momento e dispara o evento novamente para garantir que todos os componentes recebam a atualização
+        setTimeout(() => {
+          window.dispatchEvent(sitesCountEvent);
+          console.log(`Contador re-enviado após escaneamento: ${response.data.sitesScanned}`);
+        }, 500);
+      } else {
+        // Se não recebemos o número de sites, busca do servidor
+        try {
+          const statsResponse = await fetch(`/api/stats?t=${new Date().getTime()}`, {
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
+          });
+          
+          if (statsResponse.ok) {
+            const statsData = await statsResponse.json();
+            if (statsData && typeof statsData.sitesScanned === 'number') {
+              const sitesCountEvent = new CustomEvent('sites-count-updated', {
+                detail: { count: statsData.sitesScanned }
+              });
+              window.dispatchEvent(sitesCountEvent);
+              console.log(`Contador obtido da API após escaneamento: ${statsData.sitesScanned}`);
+            }
+          }
+        } catch (error) {
+          console.error('Erro ao buscar contador após escaneamento:', error);
+        }
       }
     } catch (error: any) {
       console.error('Erro ao escanear:', error);

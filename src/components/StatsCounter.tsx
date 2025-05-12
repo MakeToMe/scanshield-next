@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CounterAnimation from './CounterAnimation';
 
 // Evento personalizado para atualizar o contador
@@ -17,25 +17,32 @@ export default function StatsCounter() {
   // Inicializa com 0 e atualiza quando os dados forem carregados
   const [sitesScanned, setSitesScanned] = useState(0);
 
-  useEffect(() => {
-    // Função para buscar as estatísticas do servidor uma única vez ao carregar
-    async function fetchStats() {
-      try {
-        // Busca as estatísticas uma única vez ao carregar
-        const response = await fetch('/api/stats');
-        
-        if (response.ok) {
-          const data = await response.json();
-          if (data && typeof data.sitesScanned === 'number') {
-            console.log(`Contador inicial: ${data.sitesScanned}`);
-            setSitesScanned(data.sitesScanned);
-          }
+  // Função para buscar as estatísticas do servidor
+  const fetchStats = useCallback(async () => {
+    try {
+      // Adiciona um parâmetro de timestamp para evitar cache
+      const timestamp = new Date().getTime();
+      const response = await fetch(`/api/stats?t=${timestamp}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
         }
-      } catch (error) {
-        console.error('Erro ao carregar estatísticas iniciais:', error);
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data && typeof data.sitesScanned === 'number') {
+          console.log(`Contador obtido da API: ${data.sitesScanned}`);
+          setSitesScanned(data.sitesScanned);
+        }
       }
+    } catch (error) {
+      console.error('Erro ao carregar estatísticas:', error);
     }
-    
+  }, []);
+
+  useEffect(() => {
     // Busca as estatísticas iniciais
     fetchStats();
     
@@ -45,6 +52,10 @@ export default function StatsCounter() {
       if (typeof count === 'number' && count > 0) {
         console.log(`Contador atualizado via evento: ${count}`);
         setSitesScanned(count);
+      } else {
+        // Se o contador do evento não for válido, busca do servidor
+        console.log('Contador do evento inválido, buscando do servidor...');
+        fetchStats();
       }
     }
     
@@ -55,7 +66,7 @@ export default function StatsCounter() {
     return () => {
       window.removeEventListener('sites-count-updated', handleSitesCountUpdated);
     };
-  }, []);
+  }, [fetchStats]);
 
   return (
     <div className="text-center">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface CounterAnimationProps {
   targetValue: number;
@@ -17,10 +17,21 @@ export default function CounterAnimation({
   suffix = '',
   className = ''
 }: CounterAnimationProps) {
-  // Usar diretamente o targetValue sem animação para garantir que o valor correto seja sempre exibido
+  const [displayValue, setDisplayValue] = useState<number>(0);
+  const previousValueRef = useRef<number>(0);
+  
+  useEffect(() => {
+    // Se o targetValue for válido e diferente do valor anterior, atualize o displayValue
+    if (targetValue !== undefined && targetValue !== previousValueRef.current) {
+      console.log(`Atualizando contador para: ${targetValue}`);
+      setDisplayValue(targetValue);
+      previousValueRef.current = targetValue;
+    }
+  }, [targetValue]);
+
   return (
     <span className={className}>
-      {prefix}{targetValue !== undefined ? targetValue.toLocaleString() : '0'}{suffix}
+      {prefix}{displayValue !== undefined ? displayValue.toLocaleString() : '0'}{suffix}
     </span>
   );
 }
