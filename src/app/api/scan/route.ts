@@ -363,6 +363,90 @@ export async function POST(request: NextRequest) {
 
       // Verifica se encontrou URLs do Supabase e tokens JWT
       let supabaseInfo = null;
+      
+      // FALLBACK: Se encontrou tokens JWT mas não encontrou URLs do Supabase,
+      // tenta testar as URLs genéricas como possíveis endpoints Supabase
+      if (scanJsonData.tokensJWT && scanJsonData.tokensJWT.length > 0 &&
+          (!scanJsonData.urlsSupabase || scanJsonData.urlsSupabase.length === 0) &&
+          scanJsonData.urlsGenericas && scanJsonData.urlsGenericas.length > 0) {
+        
+        console.log('\n\n🔍 INICIANDO FALLBACK: Testando URLs genéricas como possíveis endpoints Supabase');
+        
+        // Lista de domínios famosos que sabemos que não são Supabase
+        const knownDomains = [
+          'react.dev', 'reactjs.org',
+          'github.com', 'githubusercontent.com',
+          'mozilla.org', 'mdn.io',
+          'google.com', 'googleapis.com',
+          'cloudflare.com',
+          'vercel.app', 'vercel.com',
+          'netlify.app', 'netlify.com',
+          'npmjs.com', 'unpkg.com',
+          'jquery.com',
+          'bootstrap.com', 'getbootstrap.com',
+          'fontawesome.com',
+          'jsdelivr.net',
+          'cdnjs.cloudflare.com'
+        ];
+        
+        // Filtrar as URLs genéricas, removendo as URLs de domínios conhecidos
+        const potentialSupabaseUrls = scanJsonData.urlsGenericas.filter((url: string) => {
+          try {
+            const urlObj = new URL(url);
+            // Verifica se o domínio não está na lista de domínios conhecidos
+            return !knownDomains.some(domain => urlObj.hostname.includes(domain));
+          } catch {
+            return false; // Se não for uma URL válida, ignora
+          }
+        });
+        
+        console.log(`Encontradas ${potentialSupabaseUrls.length} URLs potenciais para testar:`, potentialSupabaseUrls);
+        
+        // Usar o primeiro token JWT encontrado para testar as URLs
+        const token = String(scanJsonData.tokensJWT[0]);
+        
+        // Testar cada URL potencial
+        for (const url of potentialSupabaseUrls) {
+          try {
+            // Normalizar a URL (remover barra final se existir)
+            let testUrl = String(url);
+            if (testUrl.endsWith('/')) {
+              testUrl = testUrl.slice(0, -1);
+            }
+            
+            console.log(`Testando URL: ${testUrl}`);
+            
+            // Tentar acessar a OpenAPI do Supabase nesta URL
+            const testResponse = await fetch(`${testUrl}/rest/v1/?select=*`, {
+              method: 'GET',
+              headers: {
+                'apikey': token,
+                'Authorization': `Bearer ${token}`
+              }
+            });
+            
+            // Se a resposta for bem-sucedida, esta é uma URL do Supabase
+            if (testResponse.ok) {
+              console.log(`✅ URL válida do Supabase encontrada: ${testUrl}`);
+              
+              // Adicionar à lista de URLs do Supabase
+              if (!scanJsonData.urlsSupabase) {
+                scanJsonData.urlsSupabase = [];
+              }
+              scanJsonData.urlsSupabase.push(testUrl);
+              
+              // Não precisamos testar mais URLs
+              break;
+            } else {
+              console.log(`❌ URL não é um endpoint Supabase válido: ${testUrl}`);
+            }
+          } catch (error: any) {
+            console.error(`Erro ao testar URL ${url}:`, error);
+          }
+        }
+      }
+      
+      // Continua com a lógica original
       if (scanJsonData.urlsSupabase && scanJsonData.urlsSupabase.length > 0 && 
           scanJsonData.tokensJWT && scanJsonData.tokensJWT.length > 0) {
         
