@@ -1,0 +1,145 @@
+{
+  "classifications": {
+    "SQL Injection": {
+      "desc": "SQL injection vulnerabilities allow an attacker to alter the queries executed on the backend database. An attacker may then be able to extract or modify informations stored in the database or even escalate his privileges on the system.",
+      "sol": "To protect against SQL injection, user input must not directly be embedded in SQL statements. Instead, user input must be escaped or filtered or parameterized statements must be used.",
+      "ref": {
+        "http://www.owasp.org/index.php/SQL_Injection": "http://www.owasp.org/index.php/SQL_Injection",
+        "http://en.wikipedia.org/wiki/SQL_injection": "http://en.wikipedia.org/wiki/SQL_injection",
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')": "http://cwe.mitre.org/data/definitions/89.html"
+      }
+    },
+    "Blind SQL Injection": {
+      "desc": "Blind SQL injection is a technique that exploits a vulnerability occurring in the database of an application. This kind of vulnerability is harder to detect than basic SQL injections because no error message will be displayed on the webpage.",
+      "sol": "To protect against SQL injection, user input must not directly be embedded in SQL statements. Instead, user input must be escaped or filtered or parameterized statements must be used.",
+      "ref": {
+        "http://www.owasp.org/index.php/Blind_SQL_Injection": "http://www.owasp.org/index.php/Blind_SQL_Injection",
+        "http://www.imperva.com/resources/adc/blind_sql_server_injection.html": "http://www.imperva.com/resources/adc/blind_sql_server_injection.html",
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')": "http://cwe.mitre.org/data/definitions/89.html"
+      }
+    },
+    "File Handling": {
+      "desc": "This attack is also known as Path or Directory Traversal, its aim is the access to files and directories that are stored outside the web root folder. The attacker tries to explore the directories stored in the web server. The attacker uses some techniques, for instance, the manipulation of variables that reference files with 'dot-dot-slash (../)' sequences and its variations to move up to root directory to navigate through the file system.",
+      "sol": "Prefer working without user input when using file system calls. Use indexes rather than actual portions of file names when templating or using language files (eg: value 5 from the user submission = Czechoslovakian, rather than expecting the user to return 'Czechoslovakian'). Ensure the user cannot supply all parts of the path - surround it with your path code. Validate the user's input by only accepting known good - do not sanitize the data. Use chrooted jails and code access policies to restrict where the files can be obtained or saved to.",
+      "ref": {
+        "http://www.owasp.org/index.php/Path_Traversal": "http://www.owasp.org/index.php/Path_Traversal",
+        "http://www.acunetix.com/websitesecurity/directory-traversal.htm": "http://www.acunetix.com/websitesecurity/directory-traversal.htm",
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')": "http://cwe.mitre.org/data/definitions/22.html"
+      }
+    },
+    "Cross Site Scripting": {
+      "desc": "Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications which allow code injection by malicious web users into the web pages viewed by other users. Examples of such code include HTML code and client-side scripts.",
+      "sol": "The best way to protect a web application from XSS attacks is ensure that the application performs validation of all headers, cookies, query strings, form fields, and hidden fields. Encoding user supplied output in the server side can also defeat XSS vulnerabilities by preventing inserted scripts from being transmitted to users in an executable form. Applications can gain significant protection from javascript based attacks by converting the following characters in all generated output to the appropriate HTML entity encoding:  &lt;, &gt;, &amp;, &quot;, ', (, ), #, %, ; , +, -.",
+      "ref": {
+        "http://www.owasp.org/index.php/Cross_Site_Scripting": "http://www.owasp.org/index.php/Cross_Site_Scripting",
+        "http://en.wikipedia.org/wiki/Cross-site_scripting": "http://en.wikipedia.org/wiki/Cross-site_scripting",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')": "http://cwe.mitre.org/data/definitions/79.html"
+      }
+    },
+    "CRLF Injection": {
+      "desc": "The term CRLF refers to Carriage Return (ASCII 13, \\r) Line Feed (ASCII 10, \\n). They're used to note the termination of a line, however, dealt with differently in today's popular Operating Systems. For example: in Windows both a CR and LF are required to note the end of a line, whereas in Linux/UNIX a LF is only required. This combination of CR and LR is used for example when pressing 'Enter' on the keyboard. Depending on the application being used, pressing 'Enter' generally instructs the application to start a new line, or to send a command.",
+      "sol": "Check the submitted parameters and do not allow CRLF to be injected by filtering CRLF",
+      "ref": {
+        "http://www.owasp.org/index.php/CRLF_Injection": "http://www.owasp.org/index.php/CRLF_Injection",
+        "http://www.acunetix.com/websitesecurity/crlf-injection.htm": "http://www.acunetix.com/websitesecurity/crlf-injection.htm",
+        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')": "http://cwe.mitre.org/data/definitions/93.html"
+      }
+    },
+    "Commands execution": {
+      "desc": "This attack consists in executing system commands on the server. The attacker tries to inject this commands in the request parameters",
+      "sol": "Prefer working without user input when using file system calls",
+      "ref": {
+        "http://www.owasp.org/index.php/Command_Injection": "http://www.owasp.org/index.php/Command_Injection",
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')": "http://cwe.mitre.org/data/definitions/78.html"
+      }
+    },
+    "Htaccess Bypass": {
+      "desc": "htaccess files are used to restrict access to some files or HTTP method. In some case it may be possible to bypass this restriction and access the files.",
+      "sol": "Make sure every HTTP method is forbidden if the credentials are bad.",
+      "ref": {
+        "http://blog.teusink.net/2009/07/common-apache-htaccess-misconfiguration.html": "http://blog.teusink.net/2009/07/common-apache-htaccess-misconfiguration.html",
+        "CWE-538: File and Directory Information Exposure": "http://cwe.mitre.org/data/definitions/538.html"
+      }
+    },
+    "Backup file": {
+      "desc": "It may be possible to find backup files of scripts on the webserver that the web-admin put here to save a previous version or backup files that are automaticallygenerated by the software editor used (like for example Emacs). These copies may reveal interesting informations like source code or credentials",
+      "sol": "The webadmin must manually delete the backup files or remove it from the web root. He should also reconfigure its editor to deactivate automatic backups.",
+      "ref": {
+        "Testing for Old, Backup and Unreferenced Files (OWASP-CM-006)": "http://www.owasp.org/index.php/Testing_for_Old,_Backup_and_Unreferenced_Files_(OWASP-CM-006)",
+        "CWE-530: Exposure of Backup File to an Unauthorized Control Sphere": "http://cwe.mitre.org/data/definitions/530.html"
+      }
+    },
+    "Potentially dangerous file": {
+      "desc": "A file with potential vulnerabilities has been found on the website.",
+      "sol": "Make sure the script is up-to-date and restrict access to it if possible",
+      "ref": {
+        "The Open Source Vulnerability Database": "http://osvdb.org/"
+      }
+    },
+    "Server Side Request Forgery": {
+      "desc": "The target application may have functionality for importing data from a URL, publishing data to a URL or otherwise reading data from a URL that can be tampered with.",
+      "sol": "Every URI received by the web application should be checked, especially scheme and hostname. A whitelist should be used.",
+      "ref": {
+        "Server Side Request Forgery (OWASP)": "https://www.owasp.org/index.php/Server_Side_Request_Forgery",
+        "What is Server Side Request Forgery (Acunetix)?": "https://www.acunetix.com/blog/articles/server-side-request-forgery-vulnerability/",
+        "What is the Server Side Request Forgery Vulnerability (Netsparker)": "https://www.netsparker.com/blog/web-security/server-side-request-forgery-vulnerability-ssrf/",
+        "CWE-918: Server-Side Request Forgery (SSRF)": "https://cwe.mitre.org/data/definitions/918.html"
+      }
+    },
+    "Open Redirect": {
+      "desc": "Unvalidated redirects and forwards are possible when a web application accepts untrusted input that could cause the web application to redirect the request to a URL contained within untrusted input. By modifying untrusted URL input to a malicious site, an attacker may successfully launch a phishing scam and steal user credentials.",
+      "sol": "Force all redirects to first go through a page notifying users that they are going off of your site, and have them click a link to confirm.",
+      "ref": {
+        "Owasp Open Redirect": "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html",
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')": "https://cwe.mitre.org/data/definitions/601.html"
+      }
+    },
+    "XXE": {
+      "desc": "An XML External Entity attack is a type of attack against an application that parses XML input. This attack occurs when XML input containing a reference to an external entity is processed by a weakly configured XML parser. This attack may lead to the disclosure of confidential data, denial of service, server side request forgery, port scanning from the perspective of the machine where the parser is located, and other system impacts.",
+      "sol": "The safest way to prevent XXE is always to disable DTDs (External Entities) completely.",
+      "ref": {
+        "Owasp XML External Entity (XXE) Processing": "https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing",
+        "CWE-611: Improper Restriction of XML External Entity Reference": "https://cwe.mitre.org/data/definitions/611.html"
+      }
+    },
+    "Internal Server Error": {
+      "desc": "Internal server error description",
+      "sol": "More information about the error should be found in the server logs.",
+      "ref": {
+        "Wikipedia article for 5xx HTTP error codes": "https://en.wikipedia.org/wiki/List_of_HTTP_status_codes#5xx_Server_Error"
+      }
+    },
+    "Resource consumption": {
+      "desc": "Resource consumption description",
+      "sol": "The involved script is maybe using the server resources (CPU, memory, network, file access...) in a non-efficient way",
+      "ref": {
+        "http://www.owasp.org/index.php/Asymmetric_resource_consumption_(amplification)": "http://www.owasp.org/index.php/Asymmetric_resource_consumption_(amplification)",
+        "CWE-400: Uncontrolled Resource Consumption ('Resource Exhaustion')": "http://cwe.mitre.org/data/definitions/400.html"
+      }
+    }
+  },
+  "vulnerabilities": {
+    "SQL Injection": [],
+    "Blind SQL Injection": [],
+    "File Handling": [],
+    "Cross Site Scripting": [],
+    "CRLF Injection": [],
+    "Commands execution": [],
+    "Htaccess Bypass": [],
+    "Backup file": [],
+    "Potentially dangerous file": [],
+    "Server Side Request Forgery": [],
+    "Open Redirect": [],
+    "XXE": []
+  },
+  "anomalies": {
+    "Internal Server Error": [],
+    "Resource consumption": []
+  },
+  "infos": {
+    "target": "https://rardev.io/",
+    "date": "Mon, 12 May 2025 02:06:31 +0000",
+    "version": "Wapiti 3.0.3",
+    "scope": "page"
+  }
+}
