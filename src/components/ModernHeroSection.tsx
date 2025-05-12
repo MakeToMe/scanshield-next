@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
+import ScanResultsBarChart from './ScanResultsBarChart';
+import SimpleGaugeChart from './SimpleGaugeChart';
 import dynamic from 'next/dynamic';
 
 // Importação dinâmica do Player Lottie para melhor performance
@@ -404,6 +406,36 @@ export default function ModernHeroSection() {
                   
                   {scanResult && !scanResult.error && !showNotFound && (
                     <div>
+                      {/* Gráfico de Barras Horizontais */}
+                      <ScanResultsBarChart 
+                        chaves={scanResult?.scanResults?.chavesSensiveis?.length || 0}
+                        apis={scanResult?.scanResults?.urlsApi?.length || 0}
+                        urls={scanResult?.scanResults?.urlsGenericas?.length || 0}
+                        urlsSuspeitas={scanResult?.scanResults?.urlsSuspeitas?.length || 0}
+                        tokens={scanResult?.scanResults?.tokensJWT?.length || 0}
+                        tabelas={scanResult?.supabaseInfo?.tables?.length || 0}
+                        rpcs={scanResult?.supabaseInfo?.rpcs?.length || 0}
+                      />
+                      
+                      {/* Gráfico de Medidor de Risco */}
+                      {/* Exibe o nível de risco com animação suave */}
+                      <SimpleGaugeChart 
+                        riskLevel={
+                          // Verificar várias condições para determinar o nível de risco
+                          scanResult?.analysisResult?.nivel_risco === 'alto' ? 'Alto' :
+                          scanResult?.analysisResult?.output?.includes('Risco Alto') ? 'Alto' :
+                          scanResult?.analysisResult?.output?.includes('🔴 Alto') ? 'Alto' :
+                          scanResult?.analysisResult?.output?.includes('risco como alta') ? 'Alto' :
+                          scanResult?.analysisResult?.nivel_risco === 'medio' ? 'Médio' :
+                          scanResult?.analysisResult?.output?.includes('Risco Médio') ? 'Médio' :
+                          scanResult?.analysisResult?.output?.includes('🟡 Médio') ? 'Médio' :
+                          scanResult?.analysisResult?.nivel_risco === 'baixo' ? 'Baixo' :
+                          scanResult?.analysisResult?.output?.includes('Risco Baixo') ? 'Baixo' :
+                          scanResult?.analysisResult?.output?.includes('🟢 Baixo') ? 'Baixo' :
+                          'Nulo'
+                        }
+                      />
+                      
                       {/* Resumos */}
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
                         <div className="p-6 rounded-xl bg-[#13122b] border border-[#2e2d4c]">
