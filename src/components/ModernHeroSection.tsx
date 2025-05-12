@@ -12,11 +12,11 @@ const LottiePlayer = dynamic(() => import('@lottiefiles/react-lottie-player').th
 });
 import { 
   ShieldCheckIcon, 
-  EyeIcon,
   KeyIcon, 
   LockClosedIcon,
   ServerIcon,
-  CheckCircleIcon
+  SparklesIcon,
+  GlobeAltIcon
 } from '@heroicons/react/24/outline';
 import NetworkAnimation from './NetworkAnimation';
 import CounterAnimation from './CounterAnimation';
@@ -67,33 +67,69 @@ function SecurityFeatures() {
       </h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Card 1: Automação de Navegador */}
         <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
           <div className="mb-4 bg-gradient-to-r from-[#7b68ee] to-[#a855f7] p-3 rounded-lg inline-block">
-            <KeyIcon className="h-6 w-6 text-white" />
+            <GlobeAltIcon className="h-6 w-6 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-3">Detecção de Chaves</h3>
+          <h3 className="text-xl font-bold text-white mb-3">Automação de Navegador</h3>
           <p className="text-gray-300">
-            Identifica chaves de API, tokens e credenciais expostas no código-fonte ou em respostas de API.
+            Nosso backend simula a execução real do seu site em um ambiente seguro, como se fosse um navegador de verdade, permitindo análise precisa do comportamento da aplicação.
           </p>
         </div>
         
+        {/* Card 2: Varredura Customizada */}
         <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
           <div className="mb-4 bg-gradient-to-r from-[#a855f7] to-[#38bdf8] p-3 rounded-lg inline-block">
-            <ServerIcon className="h-6 w-6 text-white" />
+            <KeyIcon className="h-6 w-6 text-white" />
           </div>
-          <h3 className="text-xl font-bold text-white mb-3">Análise de APIs</h3>
+          <h3 className="text-xl font-bold text-white mb-3">Varredura Customizada</h3>
           <p className="text-gray-300">
-            Escaneia endpoints de API para identificar vulnerabilidades, endpoints não protegidos e falhas de configuração.
+            Inspecionamos o código-fonte em busca de chaves de API, conexões com bancos de dados, URLs sensíveis e tokens vazados diretamente no frontend.
           </p>
         </div>
         
+        {/* Card 3: Reconhecimento Supabase */}
+        <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
+          <div className="mb-4 bg-gradient-to-r from-[#38bdf8] to-[#7b68ee] p-3 rounded-lg inline-block">
+            <ServerIcon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Reconhecimento Supabase</h3>
+          <p className="text-gray-300">
+            Identificamos automaticamente exposições via OpenAPI/Swagger, listando tabelas, funções, permissões públicas e possíveis brechas no seu Supabase.
+          </p>
+        </div>
+        
+        {/* Card 4: Testes de Injeção */}
+        <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
+          <div className="mb-4 bg-gradient-to-r from-[#7b68ee] to-[#a855f7] p-3 rounded-lg inline-block">
+            <LockClosedIcon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Testes de Injeção</h3>
+          <p className="text-gray-300">
+            Executamos uma varredura com foco nas principais falhas da OWASP Top 10, como XSS, CSRF e SQL Injection, usando motores como o OWASP ZAP.
+          </p>
+        </div>
+        
+        {/* Card 5: Análise Semântica com IA */}
+        <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
+          <div className="mb-4 bg-gradient-to-r from-[#a855f7] to-[#38bdf8] p-3 rounded-lg inline-block">
+            <SparklesIcon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="text-xl font-bold text-white mb-3">Análise Semântica com IA</h3>
+          <p className="text-gray-300">
+            Aplicamos um modelo de IA treinado em segurança para interpretar os dados coletados, identificar falhas e classificar automaticamente o nível e impacto do risco.
+          </p>
+        </div>
+        
+        {/* Card 6: Diagnóstico de Segurança */}
         <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c] transition-all hover:bg-[#252447] hover:border-[#3e3d6c]">
           <div className="mb-4 bg-gradient-to-r from-[#38bdf8] to-[#7b68ee] p-3 rounded-lg inline-block">
             <LockClosedIcon className="h-6 w-6 text-white" />
           </div>
           <h3 className="text-xl font-bold text-white mb-3">Diagnóstico de Segurança</h3>
           <p className="text-gray-300">
-            Fornece uma análise detalhada do nível de segurança da aplicação e recomendações para melhorias.
+            Receba um relatório claro e detalhado com a análise dos riscos identificados, além de orientações práticas para fortalecer a segurança da sua aplicação.
           </p>
         </div>
       </div>
@@ -558,33 +594,6 @@ export default function ModernHeroSection() {
         </div>
       </div>
 
-      {/* Seção de missão e visão */}
-      <section className="py-16 bg-[#13122b] border-t border-[#1e1d3c]">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c]">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-                <EyeIcon className="h-5 w-5 text-[#7b68ee] mr-2" />
-                Nossa Missão
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Fornecer ferramentas avançadas de segurança que ajudem empresas e desenvolvedores a identificar e corrigir vulnerabilidades em suas APIs e aplicações web antes que possam ser exploradas.
-              </p>
-            </div>
-            
-            <div className="p-6 rounded-xl bg-[#1e1d3c] border border-[#2e2d4c]">
-              <h3 className="text-xl font-bold text-white mb-4 flex items-center">
-                <CheckCircleIcon className="h-5 w-5 text-[#a855f7] mr-2" />
-                Nossa Visão
-              </h3>
-              <p className="text-gray-300 leading-relaxed">
-                Criar um ambiente digital mais seguro através da detecção proativa de vulnerabilidades e da educação sobre melhores práticas de segurança para desenvolvedores e empresas.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-      
       {/* Seção de recursos de segurança */}
       <section className="py-16 bg-[#13122b] border-t border-[#1e1d3c]">
         <div className="container mx-auto px-4">
