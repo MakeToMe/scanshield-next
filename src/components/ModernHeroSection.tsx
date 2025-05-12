@@ -294,12 +294,14 @@ export default function ModernHeroSection() {
   // e atualizando o contador através de eventos
 
   return (
-    <div className="min-h-screen bg-[#13122b] text-white">
-      {/* Animação de rede no fundo */}
-      <div className="relative isolate overflow-hidden" style={{ minHeight: '650px', maxHeight: '750px' }}>
-        <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
-          <NetworkAnimation />  
-        </div>
+    <div className="min-h-screen bg-[#13122b] text-white relative">
+      {/* Animação de rede no fundo - posicionada para cobrir toda a página */}
+      <div className="fixed inset-0 z-0" style={{ pointerEvents: 'none' }}>
+        <NetworkAnimation />
+      </div>
+      
+      {/* Conteúdo da seção hero */}
+      <div className="relative z-10" style={{ minHeight: '650px' }}>
         <div className="mx-auto max-w-5xl py-12 sm:py-16 lg:py-20 px-4">
           <div className="text-center">
             <div className="flex justify-center items-center mb-6">
