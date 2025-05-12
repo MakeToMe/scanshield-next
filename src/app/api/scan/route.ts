@@ -246,10 +246,13 @@ export async function POST(request: NextRequest) {
                     if (type === 'genericUrls') {
                       results.urls.add(match);
 
-                      // Detecta Supabase por path típico
+                      // Detecta Supabase por path típico ou domínio .supabase.co
                       try {
                         const urlObj = new URL(match);
-                        if (supabasePaths.some(path => urlObj.pathname.startsWith(path))) {
+                        if (
+                          supabasePaths.some(path => urlObj.pathname.startsWith(path)) ||
+                          urlObj.hostname.endsWith('.supabase.co')
+                        ) {
                           results.supabaseApis.add(urlObj.origin);
                         }
                       } catch (e) {}
