@@ -197,11 +197,15 @@ export default function NetworkAnimation() {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed top-0 left-0 w-full h-full -z-10 opacity-20"
-      aria-hidden="true"
-      title="Animação de rede de segurança"
-    />
+    <div className="absolute inset-0 overflow-hidden" style={{ pointerEvents: 'none' }}>
+      <canvas 
+        ref={canvasRef} 
+        className="w-full h-full opacity-20"
+        style={{ pointerEvents: 'none' }}
+        aria-hidden="true"
+        title="Animação de rede de segurança"
+        data-component-name="NetworkAnimation"
+      />
+    </div>
   );
 }

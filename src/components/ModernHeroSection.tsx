@@ -296,8 +296,10 @@ export default function ModernHeroSection() {
   return (
     <div className="min-h-screen bg-[#13122b] text-white">
       {/* Animação de rede no fundo */}
-      <div className="relative isolate">
-        <NetworkAnimation />
+      <div className="relative isolate overflow-hidden" style={{ minHeight: '650px', maxHeight: '750px' }}>
+        <div className="absolute inset-0" style={{ pointerEvents: 'none' }}>
+          <NetworkAnimation />  
+        </div>
         <div className="mx-auto max-w-5xl py-12 sm:py-16 lg:py-20 px-4">
           <div className="text-center">
             <div className="flex justify-center items-center mb-6">
