@@ -149,7 +149,7 @@ export default function SimpleContactSection() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-gradient-to-r from-[#7b68ee] to-[#a855f7] hover:from-[#6a59d1] hover:to-[#954ae3] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#7b68ee] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center justify-center px-6 py-3 bg-[#2e2d4c] border border-[#4b4a75] rounded-md shadow-sm text-base font-medium text-white hover:bg-[#3a3964] hover:border-[#5b5a85] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4b4a75] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>

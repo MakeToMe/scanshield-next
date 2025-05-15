@@ -149,8 +149,8 @@ export default function ContactSection() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`flex items-center px-6 py-3 bg-gradient-to-r from-primary to-secondary rounded-lg text-white font-medium transition-all shadow-lg hover:shadow-xl ${
-                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:translate-y-[-2px]'
+                className={`flex items-center px-6 py-3 bg-[#2e2d4c] border border-[#4b4a75] rounded-lg text-white font-medium transition-all shadow-lg hover:shadow-xl ${
+                  isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#3a3964] hover:border-[#5b5a85]'
                 }`}
               >
                 {isSubmitting ? (

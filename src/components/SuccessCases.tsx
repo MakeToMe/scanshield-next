@@ -49,31 +49,29 @@ const SuccessCases: React.FC = () => {
           {testimonials.map((item, index) => (
             <div key={index} className="bg-[#13122b] border border-[#2e2d4c] rounded-xl p-6 transition-transform duration-300 hover:transform hover:scale-105 relative z-10">
               <div className="flex flex-col h-full">
-                <div className="flex items-center mb-6">
-                  <div className="relative w-32 h-16 bg-white rounded-md p-2 flex items-center justify-center">
+                <div className="flex flex-col items-center mb-6">
+                  <div className="relative w-40 h-20 bg-white rounded-md p-2 flex items-center justify-center mb-4">
                     <Image 
                       src={item.logo} 
                       alt={`${item.name} logo`} 
-                      width={120} 
-                      height={60} 
+                      width={140} 
+                      height={70} 
                       className="object-contain"
                     />
                   </div>
-                  <div className="ml-4">
-                    <h3 className="text-xl font-bold text-white">{item.name}</h3>
-                    <a 
-                      href={item.url} 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-[#7b68ee] hover:text-[#a855f7] transition-colors"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        window.open(item.url, '_blank');
-                      }}
-                    >
-                      {item.site}
-                    </a>
-                  </div>
+                  <h3 className="text-xl font-bold text-white mb-1">{item.name}</h3>
+                  <a 
+                    href={item.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-[#7b68ee] hover:text-[#a855f7] transition-colors mb-4"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      window.open(item.url, '_blank');
+                    }}
+                  >
+                    {item.site}
+                  </a>
                 </div>
 
                 <div className="flex-grow">
