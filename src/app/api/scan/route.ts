@@ -594,8 +594,15 @@ export async function POST(request: NextRequest) {
           } else {
             console.error('Erro ao obter tabelas:', await tablesResponse.text());
             
-            // Definir flag para indicar que estamos usando o fallback
-            let usandoFallback = true;
+            console.log('\n\n⚠️ OpenAPI falhou - Interrompendo fluxo normal e enviando para webhook');
+            
+            // Fechar o navegador antes de enviar o fallback
+            try {
+              await browser.close();
+              console.log('Navegador fechado com sucesso antes do fallback');
+            } catch (browserError) {
+              console.error('Erro ao fechar o navegador antes do fallback:', browserError);
+            }
             
             // Fallback: enviar o JSON do passo 1 para o endpoint quando a chamada OpenAPI falhar
             try {
@@ -617,8 +624,9 @@ export async function POST(request: NextRequest) {
                   if (fs.existsSync(publicDir)) {
                     const fallbackFilePath = path.join(publicDir, `${domainName}-fallback.json`);
                     fs.writeFileSync(fallbackFilePath, JSON.stringify({
-                      status: 'fallback_iniciado',
-                      timestamp: new Date().toISOString()
+                      status: 'fallback_enviado',
+                      timestamp: new Date().toISOString(),
+                      message: 'Fluxo interrompido após envio do fallback'
                     }, null, 2));
                     console.log(`\n\n✅ Registro de fallback salvo em: ${fallbackFilePath}`);
                   }
@@ -626,23 +634,35 @@ export async function POST(request: NextRequest) {
                   console.error('Aviso: Não foi possível salvar o arquivo de fallback:', saveError);
                 }
                 
-                // Aguardar um tempo para o processamento do fallback (opcional)
-                // await new Promise(resolve => setTimeout(resolve, 2000));
+                // Retornar resposta imediatamente, interrompendo o fluxo
+                return NextResponse.json({
+                  success: true,
+                  message: 'Scan concluído com fallback para OpenAPI',
+                  scanId: scanId,
+                  status: 'fallback_enviado'
+                });
                 
               } else {
                 console.error('❌ Erro ao enviar fallback OpenAPI:', await fallbackResponse.text());
-                usandoFallback = false;
+                
+                // Retornar resposta de erro, interrompendo o fluxo
+                return NextResponse.json({
+                  success: false,
+                  message: 'Erro ao enviar fallback para OpenAPI',
+                  scanId: scanId,
+                  status: 'fallback_erro'
+                });
               }
             } catch (fallbackError) {
               console.error('❌ Erro ao executar fallback OpenAPI:', fallbackError);
-              usandoFallback = false;
-            }
-            
-            // Se estamos usando o fallback, podemos ajustar o fluxo aqui
-            if (usandoFallback) {
-              console.log('🔄 Usando modo fallback para OpenAPI - ajustando fluxo');
-              // Podemos definir valores padrão para tabelas e RPCs se necessário
-              // ou simplesmente continuar com os valores vazios já definidos
+              
+              // Retornar resposta de erro, interrompendo o fluxo
+              return NextResponse.json({
+                success: false,
+                message: 'Erro ao executar fallback para OpenAPI',
+                scanId: scanId,
+                status: 'fallback_erro'
+              });
             }
           }
           
