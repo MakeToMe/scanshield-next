@@ -504,8 +504,44 @@ export async function POST(request: NextRequest) {
               // Continua a execução mesmo com erro
             }
             
+            // VERIFICAÇÃO OBJETIVA: A OpenAPI trouxe resultado válido?
+            if (!(tablesData && typeof tablesData === 'object' && tablesData.paths)) {
+              console.log('\n\n⚠️ OpenAPI retornou resposta OK mas sem estrutura válida');
+              
+              // Fechar o navegador
+              try {
+                await browser.close();
+              } catch (error) {
+                console.error('Erro ao fechar o navegador:', error);
+              }
+              
+              // Enviar para o webhook de fallback
+              console.log('\n\n🔄 Enviando para webhook de fallback...');
+              try {
+                const fallbackResponse = await fetch('https://rarwhk.rardevops.com/webhook/openapi', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify(scanJsonData)
+                });
+                
+                console.log(fallbackResponse.ok ? '✅ Fallback enviado com sucesso' : '❌ Erro ao enviar fallback');
+              } catch (error) {
+                console.error('❌ Erro ao enviar fallback:', error);
+              }
+              
+              // INTERROMPER o fluxo aqui
+              return NextResponse.json({
+                success: true,
+                message: 'Scan interrompido: OpenAPI inválida, fallback enviado',
+                scanId: scanId
+              });
+            }
+            
             // Processar o documento OpenAPI para extrair tabelas e RPCs
-            if (tablesData && typeof tablesData === 'object' && tablesData.paths) {
+            // Só chega aqui se a OpenAPI for válida
+            {
               // Extrair tabelas dos caminhos da API
               const tables = [];
               const rpcs = [];
