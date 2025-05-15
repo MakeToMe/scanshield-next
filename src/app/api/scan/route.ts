@@ -7,6 +7,9 @@ import { startScan, updateScanStatus } from '../scan-status/utils';
 import { incrementSitesCounter } from '@/lib/increment-counter';
 
 export async function POST(request: NextRequest) {
+  // Variável para controlar se o fallback da OpenAPI foi acionado
+  let fallbackOpenApiAcionado = false;
+  
   try {
     // Verificar se estamos em ambiente Docker sem suporte completo ao Playwright
     let isPlaywrightAvailable = true;
@@ -594,6 +597,9 @@ export async function POST(request: NextRequest) {
           } else {
             console.error('Erro ao obter tabelas:', await tablesResponse.text());
             
+            // Definir a variável de controle para indicar que o fallback foi acionado
+            fallbackOpenApiAcionado = true;
+            
             console.log('\n\n⚠️ OpenAPI falhou - Interrompendo fluxo normal e enviando para webhook');
             
             // Fechar o navegador antes de enviar o fallback
@@ -693,6 +699,20 @@ export async function POST(request: NextRequest) {
         } catch (error) {
           console.error('Erro ao acessar a API do Supabase:', error);
         }
+      }
+      
+      // Verificar se o fallback da OpenAPI foi acionado
+      // Se foi acionado, não executar o passo 4
+      if (fallbackOpenApiAcionado) {
+        console.log('\n\n⚠️ Passo 4 ignorado porque o fallback da OpenAPI foi acionado');
+        // Fechar o navegador se ainda não foi fechado
+        try {
+          await browser.close();
+        } catch (error) {
+          // Ignora erro se o navegador já estiver fechado
+        }
+        // Encerrar a função aqui
+        return;
       }
       
       // Passo 4: Enviar o JSON para o endpoint e processar a resposta
