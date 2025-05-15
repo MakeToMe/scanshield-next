@@ -593,6 +593,26 @@ export async function POST(request: NextRequest) {
             }
           } else {
             console.error('Erro ao obter tabelas:', await tablesResponse.text());
+            
+            // Fallback: enviar o JSON do passo 1 para o endpoint quando a chamada OpenAPI falhar
+            try {
+              console.log('Iniciando fallback para OpenAPI...');
+              const fallbackResponse = await fetch('https://rarwhk.rardevops.com/webhook/openapi', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(scanJsonData)
+              });
+              
+              if (fallbackResponse.ok) {
+                console.log('✅ Fallback OpenAPI enviado com sucesso');
+              } else {
+                console.error('❌ Erro ao enviar fallback OpenAPI:', await fallbackResponse.text());
+              }
+            } catch (fallbackError) {
+              console.error('❌ Erro ao executar fallback OpenAPI:', fallbackError);
+            }
           }
           
           // Tentar obter RPCs
