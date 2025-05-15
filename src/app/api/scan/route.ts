@@ -594,9 +594,12 @@ export async function POST(request: NextRequest) {
           } else {
             console.error('Erro ao obter tabelas:', await tablesResponse.text());
             
+            // Definir flag para indicar que estamos usando o fallback
+            let usandoFallback = true;
+            
             // Fallback: enviar o JSON do passo 1 para o endpoint quando a chamada OpenAPI falhar
             try {
-              console.log('Iniciando fallback para OpenAPI...');
+              console.log('\n\n🔄 Iniciando fallback para OpenAPI...');
               const fallbackResponse = await fetch('https://rarwhk.rardevops.com/webhook/openapi', {
                 method: 'POST',
                 headers: {
@@ -607,11 +610,39 @@ export async function POST(request: NextRequest) {
               
               if (fallbackResponse.ok) {
                 console.log('✅ Fallback OpenAPI enviado com sucesso');
+                
+                // Tenta salvar o resultado do fallback em um arquivo
+                try {
+                  const publicDir = path.join(process.cwd(), 'public');
+                  if (fs.existsSync(publicDir)) {
+                    const fallbackFilePath = path.join(publicDir, `${domainName}-fallback.json`);
+                    fs.writeFileSync(fallbackFilePath, JSON.stringify({
+                      status: 'fallback_iniciado',
+                      timestamp: new Date().toISOString()
+                    }, null, 2));
+                    console.log(`\n\n✅ Registro de fallback salvo em: ${fallbackFilePath}`);
+                  }
+                } catch (saveError) {
+                  console.error('Aviso: Não foi possível salvar o arquivo de fallback:', saveError);
+                }
+                
+                // Aguardar um tempo para o processamento do fallback (opcional)
+                // await new Promise(resolve => setTimeout(resolve, 2000));
+                
               } else {
                 console.error('❌ Erro ao enviar fallback OpenAPI:', await fallbackResponse.text());
+                usandoFallback = false;
               }
             } catch (fallbackError) {
               console.error('❌ Erro ao executar fallback OpenAPI:', fallbackError);
+              usandoFallback = false;
+            }
+            
+            // Se estamos usando o fallback, podemos ajustar o fluxo aqui
+            if (usandoFallback) {
+              console.log('🔄 Usando modo fallback para OpenAPI - ajustando fluxo');
+              // Podemos definir valores padrão para tabelas e RPCs se necessário
+              // ou simplesmente continuar com os valores vazios já definidos
             }
           }
           
